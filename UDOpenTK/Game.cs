@@ -7,17 +7,17 @@ namespace UDOpenTK
 { 
     internal class Game : GameWindow
     {
-        float[] vertices =
+        private Mesh mesh = new Mesh();
+
+        Vertex[] vertices = new Vertex[]
         {
-            0f, 0.5f, 0f, // top
-           -0.5f, -0.5f, 0f, // bottom left
-           0.5f, -0.5f, 0f // bottom right
+            new Vertex {position = new Vector3(0f, 0.5f, 0f), color = new Vector3(1f, 0f, 0f)},   // top - red
+            new Vertex {position = new Vector3(-0.5f, -0.5f, 0f), color = new Vector3(0f, 1f, 0f)}, // bottom left - green
+            new Vertex {position = new Vector3(0.5f, -0.5f, 0f), color = new Vector3(0f, 0f, 1f)}   // bottom right - blue
         };
 
         int width;
         int height;
-
-        private Mesh mesh = new Mesh();
         public Game(int width, int height) : base(GameWindowSettings.Default, NativeWindowSettings.Default)
         {
             this.width = width;

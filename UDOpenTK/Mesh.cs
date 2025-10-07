@@ -1,4 +1,12 @@
 ﻿using OpenTK.Graphics.OpenGL4;
+using OpenTK.Mathematics;
+using System.Runtime.InteropServices;
+
+struct Vertex
+{
+    public Vector3 position;
+    public Vector3 color;
+}
 
 namespace UDOpenTK
 {
@@ -7,18 +15,26 @@ namespace UDOpenTK
         int vao;
         int vbo;
         int shaderProgram;
+        private int vertexCount;
 
-        public void Load(float[] vertices, string vertexShaderPath, string fragmentShaderPath)
+        public void Load(Vertex[] vertices, string vertexShaderPath, string fragmentShaderPath)
         {
+            vertexCount = vertices.Length;
             vao = GL.GenVertexArray();
             vbo = GL.GenBuffer();
 
-            GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
-            GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StaticDraw);
-
             GL.BindVertexArray(vao);
-            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 0, 0);
+
+            GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
+            GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * Marshal.SizeOf<Vertex>(), vertices, BufferUsageHint.StaticDraw);
+
+            int stride = Marshal.SizeOf<Vertex>();
+
+            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, stride, 0);
             GL.EnableVertexAttribArray(0);
+
+            GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, stride, 3 * sizeof(float));
+            GL.EnableVertexAttribArray(1);
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             GL.BindVertexArray(0);
@@ -53,7 +69,7 @@ namespace UDOpenTK
         {
             GL.UseProgram(shaderProgram);
             GL.BindVertexArray(vao);
-            GL.DrawArrays(PrimitiveType.Triangles, 0, 3);
+            GL.DrawArrays(PrimitiveType.Triangles, 0, vertexCount);
         }
 
         public void Shutdown()
