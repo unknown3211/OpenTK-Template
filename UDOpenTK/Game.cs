@@ -9,7 +9,7 @@ namespace UDOpenTK
     {
         private Mesh mesh = new Mesh();
 
-        Vertex[] vertices = new Vertex[]
+        Vertex[] vertices =
         {
             new Vertex {position = new Vector3(0f, 0.5f, 0f), color = new Vector3(1f, 0f, 0f)},   // top - red
             new Vertex {position = new Vector3(-0.5f, -0.5f, 0f), color = new Vector3(0f, 1f, 0f)}, // bottom left - green
