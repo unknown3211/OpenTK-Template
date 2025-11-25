@@ -11,13 +11,21 @@ namespace UDOpenTK
 
         Vertex[] vertices =
         {
-            new Vertex {position = new Vector3(0f, 0.5f, 0f), color = new Vector3(1f, 0f, 0f)},   // top - red
-            new Vertex {position = new Vector3(-0.5f, -0.5f, 0f), color = new Vector3(0f, 1f, 0f)}, // bottom left - green
-            new Vertex {position = new Vector3(0.5f, -0.5f, 0f), color = new Vector3(0f, 0f, 1f)}   // bottom right - blue
+            new Vertex {position = new Vector3(0.5f, 0.5f, 0f), color = new Vector3(1f, 0f, 0f)},  // top-right -> red
+            new Vertex {position = new Vector3(0.5f, -0.5f, 0f), color = new Vector3(0f, 1f, 0f)},   // bottom-right -> green
+            new Vertex {position = new Vector3(-0.5f, -0.5f, 0f), color = new Vector3(0f, 0f, 1f)}, // bottom-left -> blue
+            new Vertex {position = new Vector3(-0.5f, 0.5f, 0f), color = new Vector3(1f, 0.984f, 0f)}  // top-left -> yellow
+        };
+
+        uint[] indices =
+        {
+            0, 1, 3,
+            1, 2, 3
         };
 
         int width;
         int height;
+
         public Game(int width, int height) : base(GameWindowSettings.Default, NativeWindowSettings.Default)
         {
             this.width = width;
@@ -34,7 +42,7 @@ namespace UDOpenTK
         protected override void OnLoad()
         {
             base.OnLoad();
-            mesh.Load(vertices, "default.vert", "default.frag");
+            mesh.Load(vertices, indices, "default.vert", "default.frag");
         }
         protected override void OnUnload()
         {

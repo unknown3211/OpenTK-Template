@@ -14,19 +14,26 @@ namespace UDOpenTK
     {
         int vao;
         int vbo;
+        int ebo;
         int shaderProgram;
         private int vertexCount;
+        private int indicesCount;
 
-        public void Load(Vertex[] vertices, string vertexShaderPath, string fragmentShaderPath)
+        public void Load(Vertex[] vertices, uint[] indices, string vertexShaderPath, string fragmentShaderPath)
         {
             vertexCount = vertices.Length;
+            indicesCount = indices.Length;
             vao = GL.GenVertexArray();
             vbo = GL.GenBuffer();
+            ebo = GL.GenBuffer();
 
             GL.BindVertexArray(vao);
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
-            GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * Marshal.SizeOf<Vertex>(), vertices, BufferUsageHint.StaticDraw);
+            GL.BufferData(BufferTarget.ArrayBuffer, vertexCount * Marshal.SizeOf<Vertex>(), vertices, BufferUsageHint.StaticDraw);
+
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, ebo);
+            GL.BufferData(BufferTarget.ElementArrayBuffer, indicesCount * sizeof(uint), indices, BufferUsageHint.StaticDraw);
 
             int stride = Marshal.SizeOf<Vertex>();
 
@@ -69,7 +76,7 @@ namespace UDOpenTK
         {
             GL.UseProgram(shaderProgram);
             GL.BindVertexArray(vao);
-            GL.DrawArrays(PrimitiveType.Triangles, 0, vertexCount);
+            GL.DrawElements(PrimitiveType.Triangles, indicesCount, DrawElementsType.UnsignedInt, 0);
         }
 
         public void Shutdown()
