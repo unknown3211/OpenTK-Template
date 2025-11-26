@@ -6,6 +6,7 @@ struct Vertex
 {
     public Vector3 position;
     public Vector3 color;
+    public Vector2 texCoords;
 }
 
 namespace UDOpenTK
@@ -18,6 +19,7 @@ namespace UDOpenTK
         int shaderProgram;
         private int vertexCount;
         private int indicesCount;
+        private Texture texture;
 
         public void Load(Vertex[] vertices, uint[] indices, string vertexShaderPath, string fragmentShaderPath)
         {
@@ -37,11 +39,17 @@ namespace UDOpenTK
 
             int stride = Marshal.SizeOf<Vertex>();
 
+            // position
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, stride, 0);
             GL.EnableVertexAttribArray(0);
 
+            // color
             GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, stride, 3 * sizeof(float));
             GL.EnableVertexAttribArray(1);
+
+            // texcoord
+            GL.VertexAttribPointer(2, 2, VertexAttribPointerType.Float, false, stride, 6 * sizeof(float));
+            GL.EnableVertexAttribArray(2);
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             GL.BindVertexArray(0);
@@ -75,6 +83,14 @@ namespace UDOpenTK
         public void Draw()
         {
             GL.UseProgram(shaderProgram);
+
+            if (texture != null)
+            {
+                int uniLoc = GL.GetUniformLocation(shaderProgram, "texture0");
+                GL.Uniform1(uniLoc, 0);
+                texture.Use(TextureUnit.Texture0);
+            }
+
             GL.BindVertexArray(vao);
             GL.DrawElements(PrimitiveType.Triangles, indicesCount, DrawElementsType.UnsignedInt, 0);
         }
@@ -83,6 +99,7 @@ namespace UDOpenTK
         {
             GL.DeleteVertexArray(vao);
             GL.DeleteBuffer(vbo);
+            GL.DeleteBuffer(ebo);
             GL.DeleteProgram(shaderProgram);
         }
 
@@ -101,6 +118,16 @@ namespace UDOpenTK
                 Console.WriteLine("Failed To Load Shader: " + e.Message);
             }
             return shaderSource;
+        }
+
+        public void SetTexture(Texture texture)
+        {
+            this.texture = texture;
+        }
+
+        public void LoadTexture(string path)
+        {
+            texture = new Texture("../../../textures/" + path);
         }
     }
 }

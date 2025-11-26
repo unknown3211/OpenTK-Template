@@ -11,10 +11,10 @@ namespace UDOpenTK
 
         Vertex[] vertices =
         {
-            new Vertex {position = new Vector3(0.5f, 0.5f, 0f), color = new Vector3(1f, 0f, 0f)},  // top-right -> red
-            new Vertex {position = new Vector3(0.5f, -0.5f, 0f), color = new Vector3(0f, 1f, 0f)},   // bottom-right -> green
-            new Vertex {position = new Vector3(-0.5f, -0.5f, 0f), color = new Vector3(0f, 0f, 1f)}, // bottom-left -> blue
-            new Vertex {position = new Vector3(-0.5f, 0.5f, 0f), color = new Vector3(1f, 0.984f, 0f)}  // top-left -> yellow
+            new Vertex { position = new Vector3(0.5f, 0.5f, 0f), texCoords = new Vector2(1f, 1f) },  // top-right
+            new Vertex { position = new Vector3(0.5f, -0.5f, 0f), texCoords = new Vector2(1f, 0f) }, // bottom-right
+            new Vertex { position = new Vector3(-0.5f, -0.5f, 0f), texCoords = new Vector2(0f, 0f) },// bottom-left
+            new Vertex { position = new Vector3(-0.5f, 0.5f, 0f), texCoords = new Vector2(0f, 1f) }  // top-left
         };
 
         uint[] indices =
@@ -43,6 +43,7 @@ namespace UDOpenTK
         {
             base.OnLoad();
             mesh.Load(vertices, indices, "default.vert", "default.frag");
+            mesh.LoadTexture("brick.png");
         }
         protected override void OnUnload()
         {
